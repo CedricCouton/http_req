@@ -1,5 +1,5 @@
 //!error system
-use std::{error::Error as StdErr, fmt, io, num, str};
+use std::{error, fmt, io, num, str};
 
 #[derive(Debug, PartialEq)]
 pub enum ParseErr {
@@ -12,17 +12,23 @@ pub enum ParseErr {
     Empty,
 }
 
-impl fmt::Display for ParseErr {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "ParseErr: {}", self.description())
-    }
-}
-
-impl StdErr for ParseErr {
-    fn description(&self) -> &str {
+impl error::Error for ParseErr {
+    fn source(&self) -> Option<&(dyn error::Error + 'static)> {
         use self::ParseErr::*;
 
         match self {
+            Utf8(e) => Some(e),
+            Int(e) => Some(e),
+            StatusErr | HeadersErr | UriErr | Invalid | Empty => None,
+        }
+    }
+}
+
+impl fmt::Display for ParseErr {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        use self::ParseErr::*;
+
+        let err = match self {
             Utf8(_) => "invalid character",
             Int(_) => "cannot parse number",
             Invalid => "invalid value",
@@ -30,7 +36,8 @@ impl StdErr for ParseErr {
             StatusErr => "status line contains invalid values",
             HeadersErr => "headers contain invalid values",
             UriErr => "uri contains invalid characters",
-        }
+        };
+        write!(f, "ParseErr: {}", err)
     }
 }
 
@@ -53,21 +60,28 @@ pub enum Error {
     Tls,
 }
 
-impl fmt::Display for Error {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Error: {}", self.description())
-    }
-}
-
-impl StdErr for Error {
-    fn description(&self) -> &str {
+impl error::Error for Error {
+    fn source(&self) -> Option<&(dyn error::Error + 'static)> {
         use self::Error::*;
 
         match self {
-            IO(_) => "IO error",
-            Parse(e) => e.description(),
-            Tls => "TLS error",
+            IO(e) => Some(e),
+            Parse(e) => Some(e),
+            Tls => None,
         }
+    }
+}
+
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        use self::Error::*;
+
+        let err = match self {
+            IO(_) => "IO error",
+            Tls => "TLS error",
+            Parse(err) => return err.fmt(f),
+        };
+        write!(f, "Error: {}", err)
     }
 }
 
