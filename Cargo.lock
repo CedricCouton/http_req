@@ -126,12 +126,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "memchr"
-version = "2.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "88579771288728879b57485cc7d6b07d648c9f0141eb955f8ab7f9d45394468e"
-
-[[package]]
 name = "native-tls"
 version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"

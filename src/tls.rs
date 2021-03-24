@@ -23,7 +23,7 @@ pub struct Conn<S: io::Read + io::Write> {
     stream: native_tls::TlsStream<S>,
 
     #[cfg(feature = "rust-tls")]
-    pub stream: rustls::StreamOwned<rustls::ClientSession, S>,
+    stream: rustls::StreamOwned<rustls::ClientSession, S>,
 }
 
 impl<S: io::Read + io::Write> io::Read for Conn<S> {
@@ -88,6 +88,13 @@ impl Default for Config {
 }
 
 impl Config {
+    #[cfg(feature = "rust-tls")]
+    pub fn new(client_config: rustls::ClientConfig) -> Self {
+        Self {
+            client_config: std::sync::Arc::new(client_config)
+        }
+    }
+
     #[cfg(feature = "native-tls")]
     pub fn add_root_cert_file_pem(&mut self, file_path: &Path) -> Result<&mut Self, HttpError> {
         let f = File::open(file_path)?;
