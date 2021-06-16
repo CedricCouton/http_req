@@ -18,5 +18,6 @@ pub mod request;
 pub mod response;
 pub mod tls;
 pub mod uri;
+pub mod conn;
 
 mod chunked;

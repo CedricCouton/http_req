@@ -59,6 +59,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ea221b5284a47e40033bf9b66f35f984ec0ea2931eb03505246cd27a963f981b"
 
 [[package]]
+name = "ct-logs"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4d3686f5fa27dbc1d76c751300376e167c5a43387f44bb451fd1c24776e49113"
+dependencies = [
+ "sct",
+]
+
+[[package]]
 name = "foreign-types"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -88,6 +97,7 @@ dependencies = [
 name = "http_req"
 version = "0.7.2"
 dependencies = [
+ "ct-logs",
  "native-tls",
  "rustls",
  "unicase",
@@ -286,7 +296,6 @@ dependencies = [
 [[package]]
 name = "rustls"
 version = "0.17.0"
-source = "git+https://github.com/CedricCouton/rustls?rev=17a59b63539c13c2c9a05435b44490aa0b6b4739#17a59b63539c13c2c9a05435b44490aa0b6b4739"
 dependencies = [
  "base64",
  "log",

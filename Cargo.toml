@@ -12,6 +12,7 @@ edition = "2018"
 
 [dependencies]
 unicase = "^2.6"
+ct-logs = "0.6"
 
 [features]
 default = ["native-tls"]
@@ -38,4 +39,4 @@ travis-ci = { repository = "jayjamesjay/http_req"}
 
 
 [patch.crates-io]
-rustls = { git = "https://github.com/CedricCouton/rustls", rev = "17a59b63539c13c2c9a05435b44490aa0b6b4739"}
+rustls = { path = "../rustls/rustls"}
